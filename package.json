@@ -1,0 +1,38 @@
+{
+  "name": "prep-ai",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@heroui/react": "^2.7.5",
+    "@iconify/react": "^5.2.1",
+    "@types/bcrypt": "^5.0.2",
+    "bcrypt": "^5.1.1",
+    "cloudinary": "^2.6.0",
+    "framer-motion": "^12.6.3",
+    "mongoose": "^8.13.2",
+    "next": "15.1.4",
+    "next-auth": "^4.24.11",
+    "next-themes": "^0.4.6",
+    "nodemailer": "^6.10.1",
+    "path-to-regexp": "^8.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.5.2",
+    "recharts": "^2.15.2"
+  },
+  "devDependencies": {
+    "@react-types/shared": "^3.29.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
