@@ -17,5 +17,5 @@ export default withAuth(function middleware(req: any) {
 });
 
 export const config = {
-  matcher: ["/app/:path*"],
+  matcher: ["/app/:path*", "/app/interviews/:path*"],
 };

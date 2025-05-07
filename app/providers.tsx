@@ -17,7 +17,7 @@ type ProvidersProps = {
 const Providers = ({ children, themeProps }: ProvidersProps) => {
   const route = useRouter();
   return (
-    // TODO: navigate={route.push} => มันคืออะไร
+    // TODO: การส่ง navigate={route.push} เข้ามาช่วยให้คอมโพเนนต์ที่ใช้งาน HeroUIProvider มีความสามารถในการนำทาง (routing) โดยใช้ Next.js router ครับ
     <HeroUIProvider navigate={route.push}>
       <NextThemeProvider {...themeProps}>
         <SessionProvider>{children}</SessionProvider>

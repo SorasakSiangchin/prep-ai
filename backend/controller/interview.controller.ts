@@ -2,6 +2,7 @@ import dbConnect from "../config/dbConnect";
 import { catchAsyncErrors } from "../midlewares/catchAsyncErrors";
 import Interview from "../models/interview.model";
 import { InterviewBody } from "../types/interview.types";
+import { getCurrentUser } from "../utils/auth";
 
 const mockQuestions = (numOfQuestions: number) => {
   const questions = [];
@@ -31,8 +32,6 @@ export const createInterview = catchAsyncErrors(async (body: InterviewBody) => {
     user,
   } = body;
 
-  console.log("body : ", body);
-
   const questions = mockQuestions(numOfQuestions);
 
   // create interview
@@ -54,4 +53,14 @@ export const createInterview = catchAsyncErrors(async (body: InterviewBody) => {
     : (() => {
         throw new Error("Interview not created.");
       })();
+});
+
+export const getInterviews = catchAsyncErrors(async (request: Request) => {
+  await dbConnect();
+
+  const user = await getCurrentUser(request);
+
+  const interviews = await Interview.find({ user: user?._id });
+
+  return { interviews };
 });
