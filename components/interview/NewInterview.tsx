@@ -1,4 +1,5 @@
 "use client";
+
 import {
   industryTopics,
   interviewDifficulties,
@@ -32,6 +33,8 @@ export default function NewInterview() {
 
   const { handleSubmit, loading } = useGenericSubmitHandler(async (data) => {
     console.log("data : ", data);
+    console.log("user : ", user);
+
     const interviewData: InterviewBody = {
       industry: data.industry as string,
       topic: data.topic as string,

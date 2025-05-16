@@ -26,4 +26,7 @@
 # mailtrap (https://mailtrap.io/) => บริการทดสอบการส่งอีเมล
 - yarn add path-to-regexp => (https://www.npmjs.com/package/path-to-regexp)
 #   (สำหรับดึงค่าพารามิเตอร์จาก URL นั่นหมายความว่าเมื่อคุณมีรูปแบบ URL ที่มีค่าพารามิเตอร์ dynamic (เช่น /users/:id) ไลบรารีนี้จะช่วยจับคู่ URL จริงกับ pattern ที่กำหนดไว้และดึงค่า parameter (ในตัวอย่างคือ id) ออกมาใช้งานได้ง่ายขึ้น)
+- yarn add openai
+    # https://platform.openai.com/settings/organization/billing/overview (billing menu)
+    # https://platform.openai.com/api-keys (api key menu)
 ```

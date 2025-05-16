@@ -15,7 +15,7 @@ export interface IQuestion extends Document {
     overallScore: number; // คะแนนโดยรวม
     clarity: number; // ความชัดเจน
     completeness: number; // ความสมบูรณ์
-    relevence: number; // ความเกี่ยวข้อง
+    relevance: number; // ความเกี่ยวข้อง
     suggestion: string; // คำแนะนำ
   };
 }
@@ -29,7 +29,7 @@ export interface IInterview extends Document {
   role: string;
   numOfQuestions: number; // จำนวนคำถาม
   answered: number; // จำนวนคำถามที่ถูกต้อง
-  diffuculty: string; // ระดับความยาก
+  difficulty: string; // ระดับความยาก
   duration: number;
   durationLeft: number;
   status: string;
@@ -114,7 +114,7 @@ const interviewSchema = new mongoose.Schema<IInterview>(
       type: Number,
       default: 0,
     },
-    diffuculty: {
+    difficulty: {
       type: String,
       required: [true, "Difficulty is required"],
       enum: interviewDifficulties,
@@ -122,7 +122,7 @@ const interviewSchema = new mongoose.Schema<IInterview>(
     duration: {
       type: Number,
       required: [true, "Duration is required"],
-      minlength: [2 * 60, `Duration must be at least ${2 * 60} seconds`],
+      minlength: [2 * 60, `Duration must be at least 2 seconds`],
     },
     durationLeft: {
       type: Number,
