@@ -14,6 +14,7 @@ import {
 } from "@/helpers/interview";
 import toast from "react-hot-toast";
 import { updateInterview } from "@/actions/interview.actions";
+import { useRouter } from "next/navigation";
 
 export default function Interview({ interview }: { interview: IInterview }) {
   // ดึงแบบทดสอบที่ยังทำไม่เสร็จอันแรก
@@ -33,8 +34,16 @@ export default function Interview({ interview }: { interview: IInterview }) {
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
+
   // คำถามปัจจุบัน
   const currentQuestion = interview?.questions[currentQuestionIndex];
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      handleExitInterview();
+    }
+  }, [timeLeft]);
 
   // Load answers from local storage
   useEffect(() => {
@@ -108,6 +117,7 @@ export default function Interview({ interview }: { interview: IInterview }) {
     }
   };
 
+  // กด Next
   const handleNextQuestion = async (answer: string) => {
     // คำตอบก่อนหน้า
     const previousAnswer = answers[currentQuestion?._id];
@@ -146,6 +156,54 @@ export default function Interview({ interview }: { interview: IInterview }) {
     }
   };
 
+  // กด Pass
+  const handlePassQuestion = async () => {
+    await handleNextQuestion("pass");
+  };
+
+  // กด Previous
+  const handlePreviousQuestion = async () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex((prevIndex) => {
+        const newIndex = prevIndex - 1;
+        const previousQuestion = interview?.questions[newIndex];
+        setAnswer(
+          getAnswerFromLocalStorage(interview?._id, previousQuestion?._id)
+        );
+        return newIndex;
+      });
+    }
+  };
+
+  // กดออกจากการทำแบบสัมภาษณ์
+  const handleExitInterview = async () => {
+    setLoading(true);
+
+    try {
+      const res = await updateInterview(
+        interview?._id, // บทสัมภาษไหน
+        timeLeft?.toString(), // ใช้เวลาไปเท่าไหร่
+        currentQuestion?._id, // คำถามข้อไหน
+        answer, // คำถามที่กรอก
+        true
+      );
+
+      if (res?.error) {
+        setLoading(false);
+        return toast.error(res?.error?.message);
+      }
+
+      if (res?.updated) {
+        setLoading(false);
+        router.push("/app/interviews");
+      }
+    } catch (error) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex h-full w-full max-w-full flex-col gap-8">
       {showAlert && (
@@ -160,20 +218,35 @@ export default function Interview({ interview }: { interview: IInterview }) {
         aria-label="Interview Progress"
         className="w-full"
         color="default"
-        label={`Question 1 of 10`}
+        label={`Question ${currentQuestionIndex + 1} of ${
+          interview?.numOfQuestions
+        }`}
         size="md"
-        value={4}
+        value={((currentQuestionIndex + 1) / interview.numOfQuestions) * 100}
       />
+
       <div className="flex flex-wrap gap-1.5">
-        <Chip
-          color={"success"}
-          size="sm"
-          variant="flat"
-          className="font-bold cursor-pointer text-sm radius-full"
-        >
-          1
-        </Chip>
+        {interview?.questions?.map((question: IQuestion, index: number) => {
+          return (
+            <Chip
+              key={index}
+              color={answers[question?._id] ? "success" : "default"} // คำถามไหนที่มีคำตอบแล้วให้เป็นสีเขียว
+              size="sm"
+              variant="flat"
+              className="font-bold cursor-pointer text-sm radius-full"
+              onClick={() => {
+                setCurrentQuestionIndex(index); // set index ของคำถามปัจจุบัน
+                setAnswer(
+                  getAnswerFromLocalStorage(interview?._id, question?._id)
+                ); // ถึงคำตอบที่เรากดเข้าไป
+              }}
+            >
+              {index + 1}
+            </Chip>
+          );
+        })}
       </div>
+
       <div className="flex flex-col sm:flex-row justify-between items-center mb-5">
         <span className="text-lg font-semibold text-right mb-2 sm:mb-0">
           Duration Left: {formatTime(timeLeft)}
@@ -182,12 +255,15 @@ export default function Interview({ interview }: { interview: IInterview }) {
           color="danger"
           startContent={<Icon icon="solar:exit-outline" fontSize={18} />}
           variant="solid"
+          onPress={handleExitInterview}
+          isDisabled={loading}
+          isLoading={loading}
         >
           Save & Exit Interview
         </Button>
       </div>
 
-      <span className="text-center">
+      <span className="text-center h-40">
         <span
           className={`tracking-tight inline font-semibold bg-clip-text text-transparent bg-gradient-to-b from-[#FF1CF7] to-[#b249f8] text-[1.4rem] lg:text-2.5xl flex items-center justify-center h-full`}
         >
@@ -214,6 +290,9 @@ export default function Interview({ interview }: { interview: IInterview }) {
               width={20}
             />
           }
+          onPress={handlePreviousQuestion}
+          isDisabled={loading || currentQuestionIndex === 0}
+          isLoading={loading}
         >
           Previous
         </Button>
@@ -230,6 +309,9 @@ export default function Interview({ interview }: { interview: IInterview }) {
               width={18}
             />
           }
+          onPress={() => handlePassQuestion()}
+          isDisabled={loading}
+          isLoading={loading}
         >
           Pass
         </Button>
