@@ -1,0 +1,28 @@
+{
+"servers": {
+    "filesystem01": {
+        "command": "npx",
+        "args": [
+            "-y",
+            "@modelcontextprotocol/server-filesystem",
+            "${input:baseDirectory}",
+            "${input:allowedDirectory}"
+        ],
+        "type": "stdio",
+        "env": {}
+    }
+},
+"inputs": [
+    {
+        "id": "baseDirectory",
+        "type": "promptString",
+        "description": "Enter the base directory path for the server"
+    },
+    {
+        "id": "allowedDirectory",
+        "type": "promptString",
+        "description": "Enter the path to another allowed directory"
+    }
+],
+
+}

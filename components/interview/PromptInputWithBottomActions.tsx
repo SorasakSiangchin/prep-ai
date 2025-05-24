@@ -6,6 +6,7 @@ import { Icon } from "@iconify/react";
 import PromptInput from "./PromptInput";
 import toast from "react-hot-toast";
 
+// SpeechRecognition และ webkitSpeechRecognition ซึ่งใช้สำหรับการรู้จำเสียงของเบราว์เซอร์
 declare global {
   interface Window {
     SpeechRecognition: any;
@@ -13,6 +14,7 @@ declare global {
   }
 }
 
+// เลือกใช้ SpeechRecognition ที่มีอยู่ใน window หรือ webkitSpeechRecognition (ในกรณีเบราว์เซอร์บางตัวที่ใช้คำนำหน้า webkit)
 const SpeechRecognition =
   (typeof window !== "undefined" && window.SpeechRecognition) ||
   window.webkitSpeechRecognition;
